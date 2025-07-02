@@ -1,0 +1,224 @@
+/**
+ * Content Script 样式文件
+ * 为插件功能提供UI样式
+ */
+
+/* Toast 提示样式 */
+.file-uploader-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+.file-uploader-toast.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* 不同类型的Toast样式 */
+.file-uploader-toast-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-left: 4px solid #047857;
+}
+
+.file-uploader-toast-error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border-left: 4px solid #b91c1c;
+}
+
+.file-uploader-toast-info {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border-left: 4px solid #1d4ed8;
+}
+
+/* 文件选择指示器 */
+.file-uploader-indicator {
+  position: absolute;
+  background: rgba(59, 130, 246, 0.1);
+  border: 2px dashed #3b82f6;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #3b82f6;
+  pointer-events: none;
+  z-index: 1000;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 文件名高亮样式 */
+.file-uploader-filename {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* 加载动画 */
+.file-uploader-loading {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 文件拖拽区域样式 */
+.file-uploader-drop-zone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(59, 130, 246, 0.1);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.file-uploader-drop-zone.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.file-uploader-drop-zone-content {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  border: 2px dashed #3b82f6;
+}
+
+.file-uploader-drop-zone-icon {
+  font-size: 48px;
+  color: #3b82f6;
+  margin-bottom: 16px;
+}
+
+.file-uploader-drop-zone-text {
+  font-size: 18px;
+  color: #374151;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.file-uploader-drop-zone-subtext {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .file-uploader-toast {
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    transform: translateY(-100%);
+  }
+  
+  .file-uploader-toast.show {
+    transform: translateY(0);
+  }
+  
+  .file-uploader-drop-zone-content {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+  
+  .file-uploader-drop-zone-icon {
+    font-size: 36px;
+  }
+  
+  .file-uploader-drop-zone-text {
+    font-size: 16px;
+  }
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .file-uploader-drop-zone-content {
+    background: #1f2937;
+    color: #f9fafb;
+  }
+  
+  .file-uploader-drop-zone-text {
+    color: #f9fafb;
+  }
+  
+  .file-uploader-drop-zone-subtext {
+    color: #d1d5db;
+  }
+}
+
+/* 确保不影响页面原有样式 */
+.file-uploader-toast,
+.file-uploader-indicator,
+.file-uploader-drop-zone {
+  box-sizing: border-box;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 防止与页面样式冲突 */
+.file-uploader-toast * {
+  box-sizing: border-box;
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .file-uploader-toast {
+    border: 2px solid currentColor;
+  }
+  
+  .file-uploader-indicator {
+    border-width: 3px;
+  }
+}
+
+/* 减少动画模式支持 */
+@media (prefers-reduced-motion: reduce) {
+  .file-uploader-toast,
+  .file-uploader-indicator,
+  .file-uploader-drop-zone,
+  .file-uploader-loading {
+    animation: none;
+    transition: none;
+  }
+}

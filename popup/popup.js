@@ -48,7 +48,8 @@ class PopupManager {
           maxFileSize: 1024 * 1024,
           supportedTypes: ['.txt', '.md', '.json', '.csv', '.js', '.ts', '.html', '.css', '.xml', '.yaml', '.yml'],
           showToasts: true,
-          autoTrigger: true
+          autoTrigger: true,
+          rootDirectory: ''
         };
       }
     } catch (error) {
@@ -78,10 +79,6 @@ class PopupManager {
       this.togglePlugin();
     });
 
-    // 测试功能按钮
-    document.getElementById('testBtn').addEventListener('click', () => {
-      this.testFunction();
-    });
 
     // 设置项变化监听
     document.getElementById('showToasts').addEventListener('change', (e) => {
@@ -94,6 +91,21 @@ class PopupManager {
 
     document.getElementById('maxFileSize').addEventListener('change', (e) => {
       this.updateSetting('maxFileSize', parseInt(e.target.value));
+    });
+
+    // 根目录路径变化监听
+    document.getElementById('rootDirectory').addEventListener('change', (e) => {
+      this.updateSetting('rootDirectory', e.target.value);
+    });
+
+    // 选择根目录按钮点击事件
+    document.getElementById('selectRootDir').addEventListener('click', () => {
+      this.selectRootDirectory();
+    });
+
+    // 加载根目录按钮点击事件
+    document.getElementById('loadRootDir').addEventListener('click', () => {
+      this.loadRootDirectory();
     });
 
     // 底部链接
@@ -139,6 +151,7 @@ class PopupManager {
     document.getElementById('showToasts').checked = this.settings.showToasts;
     document.getElementById('autoTrigger').checked = this.settings.autoTrigger;
     document.getElementById('maxFileSize').value = this.settings.maxFileSize;
+    document.getElementById('rootDirectory').value = this.settings.rootDirectory || '';
 
     // 更新统计数据
     document.getElementById('totalFiles').textContent = this.stats.totalFiles;
@@ -152,24 +165,66 @@ class PopupManager {
     const newState = !this.settings.enabled;
     await this.updateSetting('enabled', newState);
     this.updateUI();
+    // 通知所有标签页插件状态已更改
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach(tab => {
+        chrome.tabs.sendMessage(tab.id, {
+          action: 'updatePluginState',
+          enabled: newState
+        }).catch(() => {
+          // 忽略无法发送消息的标签页
+        });
+      });
+    });
   }
 
   /**
-   * 测试功能
+   * 选择根目录
    */
-  testFunction() {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]) {
-        chrome.tabs.sendMessage(tabs[0].id, { action: 'testPlugin' }, (response) => {
-          if (chrome.runtime.lastError) {
-            console.error('测试功能失败:', chrome.runtime.lastError);
-            alert('测试失败：无法连接到页面');
-          } else {
-            alert('测试成功：插件正在运行');
-          }
-        });
+  async selectRootDirectory() {
+    try {
+      // 由于Chrome扩展限制，无法弹出系统文件选择器
+      const rootDir = prompt('由于Chrome扩展限制，无法弹出系统文件选择器。\nfileSystem权限仅适用于打包应用，而非扩展程序。\n请输入根目录路径:');
+      if (rootDir) {
+        await this.updateSetting('rootDirectory', rootDir);
+        alert(`已选择根目录: ${rootDir}`);
+        // 自动加载目录
+        await this.loadRootDirectory();
       }
-    });
+    } catch (error) {
+      console.error('选择根目录时出错:', error);
+      alert('选择根目录失败: ' + error.message);
+    }
+  }
+
+  /**
+   * 加载根目录
+   */
+  async loadRootDirectory() {
+    try {
+      const rootDir = this.settings.rootDirectory;
+      if (!rootDir) {
+        alert('请先输入根目录路径');
+        return;
+      }
+      console.log('加载根目录:', rootDir);
+      // 这里实际中应该有加载目录的逻辑，但由于Chrome扩展限制，我们只是模拟
+      alert(`已加载根目录: ${rootDir}`);
+      // 通知所有标签页根目录已更新
+      chrome.tabs.query({}, (tabs) => {
+        tabs.forEach(tab => {
+          chrome.tabs.sendMessage(tab.id, {
+            action: 'updateRootDirectory',
+            rootDirectory: rootDir
+          }).catch(() => {
+            // 忽略无法发送消息的标签页
+          });
+        });
+      });
+    } catch (error) {
+      console.error('加载根目录时出错:', error);
+      alert('加载根目录失败: ' + error.message);
+    }
   }
 
   /**

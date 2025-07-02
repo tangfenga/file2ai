@@ -44,13 +44,14 @@
             </svg>
             <span id="toggleText">禁用插件</span>
           </button>
-          <button class="action-btn secondary" id="testBtn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polyline points="9,11 12,14 22,4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            测试功能
-          </button>
+        </div>
+        <div class="setting-item">
+          <label class="setting-label-text">根目录路径</label>
+          <input type="text" id="rootDirectory" class="setting-input" placeholder="请输入根目录路径">
+          <div class="action-buttons">
+            <button class="action-btn primary" id="selectRootDir">选择目录</button>
+            <button class="action-btn secondary" id="loadRootDir">加载目录</button>
+          </div>
         </div>
       </section>
 

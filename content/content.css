@@ -144,6 +144,35 @@
   color: #6b7280;
 }
 
+/* 自定义文件选择器样式 */
+.file-uploader-selector {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 10000;
+}
+
+.file-uploader-selector ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.file-uploader-selector li {
+  padding: 5px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.file-uploader-selector li:hover {
+  background: #f9fafb;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .file-uploader-toast {
@@ -185,12 +214,27 @@
   .file-uploader-drop-zone-subtext {
     color: #d1d5db;
   }
+  
+  .file-uploader-selector {
+    background: #1f2937;
+    color: #f9fafb;
+    border: 1px solid #4b5563;
+  }
+  
+  .file-uploader-selector li {
+    border-bottom: 1px solid #4b5563;
+  }
+  
+  .file-uploader-selector li:hover {
+    background: #374151;
+  }
 }
 
 /* 确保不影响页面原有样式 */
 .file-uploader-toast,
 .file-uploader-indicator,
-.file-uploader-drop-zone {
+.file-uploader-drop-zone,
+.file-uploader-selector {
   box-sizing: border-box;
   line-height: 1.5;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -210,6 +254,10 @@
   .file-uploader-indicator {
     border-width: 3px;
   }
+  
+  .file-uploader-selector {
+    border-width: 2px;
+  }
 }
 
 /* 减少动画模式支持 */
@@ -217,7 +265,8 @@
   .file-uploader-toast,
   .file-uploader-indicator,
   .file-uploader-drop-zone,
-  .file-uploader-loading {
+  .file-uploader-loading,
+  .file-uploader-selector {
     animation: none;
     transition: none;
   }
